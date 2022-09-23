@@ -33,4 +33,22 @@ public class Solution
         }
         return -1;
     }
+
+    // 1652. 拆炸弹
+    // https://leetcode.cn/problems/defuse-the-bomb/
+    public int[] Decrypt(int[] code, int k)
+    {
+        int N = code.Length;
+        var result = new int[N];
+        int sign = k > 0 ? 1 : -1;
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 1; j <= k*sign; j++)
+            {
+                int idx = (i + j * sign + N) % N;
+                result[i] += code[idx];
+            }
+        }
+        return result;
+    }
 }

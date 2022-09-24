@@ -43,10 +43,41 @@ public class Solution
         int sign = k > 0 ? 1 : -1;
         for (int i = 0; i < N; i++)
         {
-            for (int j = 1; j <= k*sign; j++)
+            for (int j = 1; j <= k * sign; j++)
             {
                 int idx = (i + j * sign + N) % N;
                 result[i] += code[idx];
+            }
+        }
+        return result;
+    }
+
+    // 788. 旋转数字
+    // https://leetcode.cn/problems/rotated-digits/solution/
+    private int[] check = { 2, 2, 1, 0, 0, 1, 1, 0, 2, 1 };
+    public int RotatedDigits(int n)
+    {
+        int result = 0;
+        for (int i = 1; i <= n; ++i)
+        {
+            var si = i.ToString();
+            var atLeast1 = false;
+            var not347 = true;
+            foreach (var c in si)
+            {
+                var idx = c - '0';
+                if (check[idx] == 0)
+                {
+                    not347 = false;
+                }
+                else if (check[idx] == 1)
+                {
+                    atLeast1 = true;
+                }
+            }
+            if (atLeast1 && not347)
+            {
+                ++result;
             }
         }
         return result;

@@ -82,4 +82,46 @@ public class Solution
         }
         return result;
     }
+
+    // 面试题 17.19. 消失的两个数字
+    // https://leetcode.cn/problems/missing-two-lcci/
+    public int[] MissingTwo(int[] nums)
+    {
+        int xorN = 0;
+        for (int i = 1; i <= nums.Length + 2; i++)
+        {
+            xorN ^= i;
+        }
+        int xorNums = xorN;
+        foreach (var num in nums)
+        {
+            xorNums ^= num;
+        }
+        int least1 = (xorNums == int.MinValue) ? xorNums : xorNums & (-xorNums);  // 防止-xorNums溢出
+
+        var result = new int[2] { 0, 0 };
+        foreach (var num in nums)
+        {
+            if ((num & least1) != 0)
+            {
+                result[0] ^= num;
+            }
+            else
+            {
+                result[1] ^= num;
+            }
+        }
+        for (int i = 0; i <= nums.Length + 2; i++)
+        {
+            if ((i & least1) != 0)
+            {
+                result[0] ^= i;
+            }
+            else
+            {
+                result[1] ^= i;
+            }
+        }
+        return result;
+    }
 }

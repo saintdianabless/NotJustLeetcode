@@ -124,4 +124,25 @@ public class Solution
         }
         return result;
     }
+
+    // 面试题 01.02. 判定是否互为字符重排
+    // https://leetcode.cn/problems/check-permutation-lcci/
+    public bool CheckPermutation(string s1, string s2)
+    {
+        var h1 = new Dictionary<char, int>();
+        foreach (var c in s1)
+        {
+            var count = h1.GetValueOrDefault(c, 0);
+            h1[c] = count + 1;
+        }
+        foreach (var c in s2)
+        {
+            if (!h1.ContainsKey(c))
+            {
+                return false;
+            }
+            h1[c] -= 1;
+        }
+        return !h1.Values.Any(v => v != 0);
+    }
 }

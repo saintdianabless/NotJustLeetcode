@@ -145,4 +145,26 @@ public class Solution
         }
         return !h1.Values.Any(v => v != 0);
     }
+
+    // 面试题 17.09. 第 k 个数
+    // https://leetcode.cn/problems/get-kth-magic-number-lcci/
+    public int GetKthMagicNumber(int k)
+    {
+        var inits = new int[]{3,5,7};
+        var pq = new PriorityQueue<long, long>();
+        var exists = new HashSet<long>();
+        pq.Enqueue(1, 1);
+        exists.Add(1);
+        long magic = 0;
+        for(int i = 0; i < k; i++) {
+            magic = pq.Dequeue();
+            foreach(var f in inits) {
+                var m = f * magic;
+                if(exists.Add(m)) {
+                    pq.Enqueue(m, m);
+                }
+            }
+        }
+        return (int)magic;
+    }
 }

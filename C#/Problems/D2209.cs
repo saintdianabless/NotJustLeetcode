@@ -150,21 +150,27 @@ public class Solution
     // https://leetcode.cn/problems/get-kth-magic-number-lcci/
     public int GetKthMagicNumber(int k)
     {
-        var inits = new int[]{3,5,7};
-        var pq = new PriorityQueue<long, long>();
-        var exists = new HashSet<long>();
-        pq.Enqueue(1, 1);
-        exists.Add(1);
-        long magic = 0;
-        for(int i = 0; i < k; i++) {
-            magic = pq.Dequeue();
-            foreach(var f in inits) {
-                var m = f * magic;
-                if(exists.Add(m)) {
-                    pq.Enqueue(m, m);
-                }
+        var magics = new int[k+1];
+        magics[1] = 1;
+        int a = 1;
+        int b = 1;
+        int c = 1;
+        for(int i = 2; i <= k; i++) {
+            var m3 = magics[a] * 3;
+            var m5 = magics[b] * 5;
+            var m7 = magics[c] * 7;
+            var nextMagic = Math.Min(Math.Min(m3, m5), m7);
+            if(nextMagic == m3) {
+                ++a;
             }
+            if(nextMagic == m5) {
+                ++b;
+            }
+            if(nextMagic == m7) {
+                ++c;
+            }
+            magics[i] = nextMagic;
         }
-        return (int)magic;
+        return magics[k];
     }
 }

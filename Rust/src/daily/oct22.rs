@@ -78,6 +78,19 @@ impl Solution {
         }
         true
     }
+
+    /// # 1784. 检查二进制字符串字段
+    ///
+    /// https://leetcode.cn/problems/check-if-binary-string-has-at-most-one-segment-of-ones/
+    pub fn check_ones_segment(s: String) -> bool {
+        let s = s.into_bytes();
+        for i in 0..s.len()-1 {
+            if s[i] == b'0' && s[i+1] == b'1' {
+                return false;
+            }
+        }
+        true
+    }
 }
 
 #[cfg(test)]
@@ -118,5 +131,14 @@ mod test {
             Solution::reformat_number("--17-5 229 35-39475 ".to_string()),
             "175-229-353-94-75".to_string()
         );
+    }
+
+    #[test]
+    fn check_ones_segment() {
+        assert_eq!(Solution::check_ones_segment("1001".to_string()), false);
+        assert_eq!(Solution::check_ones_segment("110".to_string()), true);
+        assert_eq!(Solution::check_ones_segment("1000".to_string()), true);
+        assert_eq!(Solution::check_ones_segment("111".to_string()), true);
+        assert_eq!(Solution::check_ones_segment("110111".to_string()), false);
     }
 }

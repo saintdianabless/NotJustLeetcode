@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use std::collections::HashMap;
+
 use super::Solution;
 
 impl Solution {
@@ -84,8 +86,8 @@ impl Solution {
     /// https://leetcode.cn/problems/check-if-binary-string-has-at-most-one-segment-of-ones/
     pub fn check_ones_segment(s: String) -> bool {
         let s = s.into_bytes();
-        for i in 0..s.len()-1 {
-            if s[i] == b'0' && s[i+1] == b'1' {
+        for i in 0..s.len() - 1 {
+            if s[i] == b'0' && s[i + 1] == b'1' {
                 return false;
             }
         }
@@ -93,7 +95,7 @@ impl Solution {
     }
 
     /// # 921. 使括号有效的最少添加
-    /// 
+    ///
     /// https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/
     pub fn min_add_to_make_valid(s: String) -> i32 {
         let mut result = 0;
@@ -108,6 +110,31 @@ impl Solution {
             }
         }
         result + lp
+    }
+
+    /// # 811. 子域名访问计数
+    ///
+    /// https://leetcode.cn/problems/subdomain-visit-count/
+    pub fn subdomain_visits(cpdomains: Vec<String>) -> Vec<String> {
+        let mut counter: HashMap<String, usize> = HashMap::new();
+        for s in cpdomains.iter() {
+            let splited: Vec<&str> = s.split(' ').collect();
+            let rep = splited[0].parse::<usize>().unwrap();
+            let mut url = splited[1];
+            let e = counter.entry(url.to_string()).or_default();
+            *e += rep;
+            while let Some(pos) = url.find('.') {
+                let ss = pos + 1;
+                let e = counter.entry((&url[ss..]).to_string()).or_default();
+                *e += rep;
+                url = &url[ss..];
+            }
+        }
+        let mut result = Vec::with_capacity(counter.len());
+        for (k, v) in counter.into_iter() {
+            result.push(format!("{} {}", v, k));
+        }
+        result
     }
 }
 
@@ -164,5 +191,37 @@ mod test {
     fn min_add_to_make_valid() {
         assert_eq!(Solution::min_add_to_make_valid("(((".to_string()), 3);
         assert_eq!(Solution::min_add_to_make_valid("())".to_string()), 1);
+    }
+
+    #[test]
+    fn subdomain_visits() {
+        let mut get = Solution::subdomain_visits(vec!["9001 discuss.leetcode.com".to_string()]);
+        let mut want = vec![
+            "9001 leetcode.com".to_string(),
+            "9001 discuss.leetcode.com".to_string(),
+            "9001 com".to_string(),
+        ];
+        get.sort();
+        want.sort();
+        assert_eq!(get, want);
+
+        let mut get = Solution::subdomain_visits(vec![
+            "900 google.mail.com".to_string(),
+            "50 yahoo.com".to_string(),
+            "1 intel.mail.com".to_string(),
+            "5 wiki.org".to_string(),
+        ]);
+        let mut want = vec![
+            "901 mail.com".to_string(),
+            "50 yahoo.com".to_string(),
+            "900 google.mail.com".to_string(),
+            "5 wiki.org".to_string(),
+            "5 org".to_string(),
+            "1 intel.mail.com".to_string(),
+            "951 com".to_string(),
+        ];
+        get.sort();
+        want.sort();
+        assert_eq!(get, want);
     }
 }

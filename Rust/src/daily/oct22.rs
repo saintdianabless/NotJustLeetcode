@@ -91,6 +91,24 @@ impl Solution {
         }
         true
     }
+
+    /// # 921. 使括号有效的最少添加
+    /// 
+    /// https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/
+    pub fn min_add_to_make_valid(s: String) -> i32 {
+        let mut result = 0;
+        let mut lp = 0;
+        for c in s.as_bytes() {
+            if *c == b'(' {
+                lp += 1;
+            } else if lp > 0 {
+                lp -= 1;
+            } else {
+                result += 1;
+            }
+        }
+        result + lp
+    }
 }
 
 #[cfg(test)]
@@ -140,5 +158,11 @@ mod test {
         assert_eq!(Solution::check_ones_segment("1000".to_string()), true);
         assert_eq!(Solution::check_ones_segment("111".to_string()), true);
         assert_eq!(Solution::check_ones_segment("110111".to_string()), false);
+    }
+
+    #[test]
+    fn min_add_to_make_valid() {
+        assert_eq!(Solution::min_add_to_make_valid("(((".to_string()), 3);
+        assert_eq!(Solution::min_add_to_make_valid("())".to_string()), 1);
     }
 }

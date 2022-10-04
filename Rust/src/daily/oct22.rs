@@ -118,9 +118,14 @@ impl Solution {
     pub fn subdomain_visits(cpdomains: Vec<String>) -> Vec<String> {
         let mut counter: HashMap<String, usize> = HashMap::new();
         for s in cpdomains.iter() {
-            let splited: Vec<&str> = s.split(' ').collect();
-            let rep = splited[0].parse::<usize>().unwrap();
-            let mut url = splited[1];
+            let rep: usize;
+            let mut url: &str;
+            if let Some(whitespace) = s.find(' ') {
+                rep = s[..whitespace].parse().unwrap();
+                url = &s[whitespace + 1..];
+            } else {
+                unreachable!()
+            }
             let e = counter.entry(url.to_string()).or_default();
             *e += rep;
             while let Some(pos) = url.find('.') {

@@ -116,7 +116,7 @@ impl Solution {
     ///
     /// https://leetcode.cn/problems/subdomain-visit-count/
     pub fn subdomain_visits(cpdomains: Vec<String>) -> Vec<String> {
-        let mut counter: HashMap<String, usize> = HashMap::new();
+        let mut counter: HashMap<&str, usize> = HashMap::new();
         for s in cpdomains.iter() {
             let rep: usize;
             let mut url: &str;
@@ -126,11 +126,11 @@ impl Solution {
             } else {
                 unreachable!()
             }
-            let e = counter.entry(url.to_string()).or_default();
+            let e = counter.entry(url).or_default();
             *e += rep;
             while let Some(pos) = url.find('.') {
                 let ss = pos + 1;
-                let e = counter.entry((&url[ss..]).to_string()).or_default();
+                let e = counter.entry(&url[ss..]).or_default();
                 *e += rep;
                 url = &url[ss..];
             }

@@ -141,6 +141,51 @@ impl Solution {
         }
         result
     }
+
+    /// # 927. 三等分
+    ///
+    /// https://leetcode.cn/problems/three-equal-parts/
+    pub fn three_equal_parts(arr: Vec<i32>) -> Vec<i32> {
+        let n = arr.len();
+        let s: i32 = arr.iter().sum();
+        if s % 3 != 0 {
+            return vec![-1, -1];
+        }
+        if s == 0 {
+            return vec![0, 2]; // [0,0,0]
+        }
+        let group_ones = s / 3;
+        let mut ones = 0;
+        let mut fir1 = 0;
+        let mut sec1 = 0;
+        let mut thi1 = 0;
+        for i in 0..n {
+            if arr[i] == 1 {
+                if ones == 0 {
+                    fir1 = i;
+                }
+                if ones == group_ones {
+                    sec1 = i;
+                }
+                if ones == group_ones * 2 {
+                    thi1 = i;
+                    break;
+                }
+                ones += 1;
+            }
+        }
+        let group_len = n - thi1;
+        if fir1 + group_len <= sec1 && sec1 + group_len <= thi1 {
+            for i in 0..group_len {
+                if arr[fir1 + i] != arr[sec1 + i] || arr[fir1 + i] != arr[thi1 + i] {
+                    return vec![-1, -1];
+                }
+            }
+            return vec![(fir1 + group_len - 1) as i32, (sec1 + group_len) as i32];
+        }
+
+        vec![-1, -1]
+    }
 }
 
 #[cfg(test)]
@@ -228,5 +273,19 @@ mod test {
         get.sort();
         want.sort();
         assert_eq!(get, want);
+    }
+
+    #[test]
+    fn three_equal_parts() {
+        assert_eq!(Solution::three_equal_parts(vec![1, 0, 1, 0, 1]), vec![0, 3]);
+        assert_eq!(Solution::three_equal_parts(vec![1, 1, 0, 0, 1]), vec![0, 2]);
+        assert_eq!(
+            Solution::three_equal_parts(vec![1, 1, 0, 1, 1]),
+            vec![-1, -1]
+        );
+        assert_eq!(
+            Solution::three_equal_parts(vec![0, 1, 0, 1, 1, 0, 1, 1, 0, 1]),
+            vec![3, 7]
+        );
     }
 }

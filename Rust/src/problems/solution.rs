@@ -29,11 +29,35 @@ impl Solution {
             0
         }
     }
+
+    fn max_sum_of_subsequence(arr: Vec<i32>) -> i32 {
+        let mut max_subs_sums = arr.clone();
+        for i in 0..arr.len() {
+            for j in 0..i {
+                if arr[i] > arr[j] && max_subs_sums[i] < max_subs_sums[j] + arr[i] {
+                    max_subs_sums[i] = max_subs_sums[j] + arr[i];
+                }
+            }
+        }
+
+        max_subs_sums.into_iter().max().unwrap()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::problems::{Solution, TreeNode};
+
+    #[test]
+    fn max_sum_of_subsequence() {
+        assert_eq!(
+            Solution::max_sum_of_subsequence(vec![1, 100, 1, 2, 99, 4, 5]),
+            102
+        );
+        assert_eq!(Solution::max_sum_of_subsequence(vec![1 + 2 + 3 + 100]), 106);
+        assert_eq!(Solution::max_sum_of_subsequence(vec![10, 5, 3]), 10);
+        assert_eq!(Solution::max_sum_of_subsequence(vec![1]), 1);
+    }
 
     #[test]
     fn max_path_sum() {

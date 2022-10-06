@@ -186,11 +186,43 @@ impl Solution {
 
         vec![-1, -1]
     }
+
+    /// # 1800. 最大升序子数组和
+    ///
+    /// https://leetcode.cn/problems/maximum-ascending-subarray-sum/
+    pub fn max_ascending_sum(nums: Vec<i32>) -> i32 {
+        let mut max_sub_sum = nums[0];
+        let mut cur_sum = nums[0];
+        for i in 1..nums.len() {
+            if nums[i] <= nums[i - 1] {
+                max_sub_sum = max_sub_sum.max(cur_sum);
+                cur_sum = nums[i];
+            } else {
+                cur_sum += nums[i];
+            }
+        }
+        max_sub_sum.max(cur_sum)
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn max_ascending_sum() {
+        assert_eq!(Solution::max_ascending_sum(vec![10, 20, 30, 5, 10, 50]), 65);
+        assert_eq!(Solution::max_ascending_sum(vec![10, 20, 30, 40, 50]), 150);
+        assert_eq!(
+            Solution::max_ascending_sum(vec![12, 17, 15, 13, 10, 11, 12]),
+            33
+        );
+        assert_eq!(Solution::max_ascending_sum(vec![100, 10, 1]), 100);
+        assert_eq!(
+            Solution::max_ascending_sum(vec![100, 1, 1000, 1, 10000]),
+            10001
+        );
+    }
 
     #[test]
     fn can_transform() {

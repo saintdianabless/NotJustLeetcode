@@ -231,11 +231,35 @@ impl Solution {
 
         result
     }
+
+    /// # 856. 括号的分数
+    ///
+    /// https://leetcode.cn/problems/score-of-parentheses/
+    pub fn score_of_parentheses(s: String) -> i32 {
+        let s = s.into_bytes();
+        let mut result = 0;
+        let mut depth = 0;
+        for i in 0..s.len() {
+            depth += if s[i] == b'(' { 1 } else { -1 };
+            if s[i] == b')' && s[i - 1] == b'(' {
+                result += 1 << depth;
+            }
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn score_of_parentheses() {
+        assert_eq!(Solution::score_of_parentheses("()".to_string()), 1);
+        assert_eq!(Solution::score_of_parentheses("(())".to_string()), 2);
+        assert_eq!(Solution::score_of_parentheses("()()".to_string()), 2);
+        assert_eq!(Solution::score_of_parentheses("(()(()))".to_string()), 6);
+    }
 
     #[test]
     fn advantage_count() {

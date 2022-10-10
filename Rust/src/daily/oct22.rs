@@ -247,11 +247,44 @@ impl Solution {
         }
         result
     }
+
+    /// # 801. 使序列递增的最小交换次数
+    ///
+    /// https://leetcode.cn/problems/minimum-swaps-to-make-sequences-increasing/
+    pub fn min_swap(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let n = nums1.len();
+        let mut a = 0;
+        let mut b = 1;
+        for i in 1..n {
+            let last_a = a;
+            let last_b = b;
+            a = n;
+            b = n;
+            if nums1[i] > nums1[i - 1] && nums2[i] > nums2[i - 1] {
+                a = a.min(last_a);
+                b = b.min(last_b + 1);
+            }
+            if nums1[i] > nums2[i - 1] && nums2[i] > nums1[i - 1] {
+                a = a.min(last_b);  // 上次交换了，这次直接就符合
+                b = b.min(last_a + 1);  // 上次没交换，这次需要交换
+            }
+        }
+        a.min(b) as i32
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn min_swap() {
+        assert_eq!(Solution::min_swap(vec![1, 3, 5, 4], vec![1, 2, 3, 7]), 1);
+        assert_eq!(
+            Solution::min_swap(vec![0, 3, 5, 8, 9], vec![2, 1, 4, 6, 9]),
+            1
+        );
+    }
 
     #[test]
     fn score_of_parentheses() {

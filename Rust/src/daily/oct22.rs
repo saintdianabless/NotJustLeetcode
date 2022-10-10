@@ -265,17 +265,63 @@ impl Solution {
                 b = b.min(last_b + 1);
             }
             if nums1[i] > nums2[i - 1] && nums2[i] > nums1[i - 1] {
-                a = a.min(last_b);  // 上次交换了，这次直接就符合
-                b = b.min(last_a + 1);  // 上次没交换，这次需要交换
+                a = a.min(last_b); // 上次交换了，这次直接就符合
+                b = b.min(last_a + 1); // 上次没交换，这次需要交换
             }
         }
         a.min(b) as i32
+    }
+
+    /// # 1790. 仅执行一次字符串交换能否使两个字符串相等
+    ///
+    /// https://leetcode.cn/problems/check-if-one-string-swap-can-make-strings-equal/
+    pub fn are_almost_equal(s1: String, s2: String) -> bool {
+        let s1 = s1.into_bytes();
+        let s2 = s2.into_bytes();
+        let mut a = -1;
+        let mut b = -1;
+        for i in 0..s1.len() {
+            if s1[i] != s2[i] {
+                if a < 0 {
+                    a = i as i32;
+                } else if b < 0 {
+                    b = i as i32;
+                } else {
+                    return false;
+                }
+            }
+        }
+        a < 0 || (b > 0 && s1[a as usize] == s2[b as usize] && s1[b as usize] == s2[a as usize])
     }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn are_almost_equal() {
+        assert_eq!(
+            Solution::are_almost_equal("aabbcc".to_string(), "abbacc".to_string()),
+            true
+        );
+        assert_eq!(
+            Solution::are_almost_equal("bank".to_string(), "kanb".to_string()),
+            true
+        );
+        assert_eq!(
+            Solution::are_almost_equal("attack".to_string(), "defend".to_string()),
+            false
+        );
+        assert_eq!(
+            Solution::are_almost_equal("kelb".to_string(), "kelb".to_string()),
+            true
+        );
+        assert_eq!(
+            Solution::are_almost_equal("abcd".to_string(), "xycd".to_string()),
+            false
+        );
+    }
 
     #[test]
     fn min_swap() {

@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-use super::Solution;
+use super::{ListNode, Solution};
 
 impl Solution {
     /// # 1694. 重新格式化电话号码
@@ -293,11 +293,45 @@ impl Solution {
         }
         a < 0 || (b > 0 && s1[a as usize] == s2[b as usize] && s1[b as usize] == s2[a as usize])
     }
+
+    /// # 817. 链表组件
+    ///
+    /// https://leetcode.cn/problems/linked-list-components/
+    pub fn num_components(head: Option<Box<ListNode>>, nums: Vec<i32>) -> i32 {
+        let mut head = head;
+        let mut result = 0;
+        let mut f = false;
+        let nums = nums.into_iter().collect::<HashSet<i32>>();
+        while let Some(node) = head {
+            if !nums.contains(&node.val) {
+                f = false;
+            } else if !f {
+                f = true;
+                result += 1;
+            }
+            head = node.next;
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn num_components() {
+        // let lst = ListNode::from_vec(vec![1,2,3,4,5,6]);
+        // println!("{:#?}", lst);
+        assert_eq!(
+            Solution::num_components(ListNode::from_vec(vec![0, 1, 2, 3]), vec![0, 1, 3]),
+            2
+        );
+        assert_eq!(
+            Solution::num_components(ListNode::from_vec(vec![0, 1, 2, 3, 4]), vec![0, 3, 1, 4]),
+            2
+        );
+    }
 
     #[test]
     fn are_almost_equal() {

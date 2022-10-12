@@ -313,11 +313,33 @@ impl Solution {
         }
         result
     }
+
+    /// # 769. 最多能完成排序的块
+    ///
+    /// https://leetcode.cn/problems/max-chunks-to-make-sorted/
+    pub fn max_chunks_to_sorted(arr: Vec<i32>) -> i32 {
+        let mut result = 0;
+        let mut max_so_far = arr[0];
+        for i in 0..arr.len() {
+            max_so_far = max_so_far.max(arr[i]);
+            if max_so_far == i as i32 {
+                result += 1;
+            }
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn max_chunks_to_sorted() {
+        assert_eq!(Solution::max_chunks_to_sorted(vec![4, 3, 2, 1, 0]), 1);
+        assert_eq!(Solution::max_chunks_to_sorted(vec![1, 0, 2, 3, 4]), 4);
+        assert_eq!(Solution::max_chunks_to_sorted(vec![0]), 1);
+    }
 
     #[test]
     fn num_components() {

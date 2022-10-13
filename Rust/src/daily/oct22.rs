@@ -328,11 +328,36 @@ impl Solution {
         }
         result
     }
+
+    /// # 940. 不同的子序列 II
+    ///
+    /// https://leetcode.cn/problems/distinct-subsequences-ii/
+    pub fn distinct_subseq_ii(s: String) -> i32 {
+        let r#mod = 1e9 as i32 + 7;
+        let mut total = 0;
+        let mut dp = [0; 26];
+
+        for c in s.into_bytes().into_iter() {
+            let p = (c - b'a') as usize;
+            let prev = dp[p];
+            dp[p] = (total + 1) % r#mod;
+            total = ((total - prev + dp[p]) % r#mod + r#mod) % r#mod;
+        }
+
+        total
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn distinct_subseq_ii() {
+        assert_eq!(Solution::distinct_subseq_ii("abc".to_string()), 7);
+        assert_eq!(Solution::distinct_subseq_ii("aba".to_string()), 6);
+        assert_eq!(Solution::distinct_subseq_ii("aaa".to_string()), 3);
+    }
 
     #[test]
     fn max_chunks_to_sorted() {

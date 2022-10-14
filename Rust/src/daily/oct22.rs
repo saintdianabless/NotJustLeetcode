@@ -346,11 +346,49 @@ impl Solution {
 
         total
     }
+
+    /// # 1441. 用栈操作构建数组
+    ///
+    /// https://leetcode.cn/problems/build-an-array-with-stack-operations/
+    pub fn build_array(target: Vec<i32>, n: i32) -> Vec<String> {
+        let mut result = vec![];
+        let mut prev = 0;
+        for n in target {
+            for _ in 0..(n - prev - 1) {
+                result.push("Push".to_string());
+                result.push("Pop".to_string());
+            }
+            result.push("Push".to_string());
+            prev = n;
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn build_array() {
+        assert_eq!(
+            Solution::build_array(vec![1, 3], 3),
+            vec![
+                "Push".to_string(),
+                "Push".to_string(),
+                "Pop".to_string(),
+                "Push".to_string()
+            ]
+        );
+        assert_eq!(
+            Solution::build_array(vec![1, 2, 3], 3),
+            vec!["Push".to_string(), "Push".to_string(), "Push".to_string()]
+        );
+        assert_eq!(
+            Solution::build_array(vec![1, 2], 4),
+            vec!["Push".to_string(), "Push".to_string()]
+        );
+    }
 
     #[test]
     fn distinct_subseq_ii() {

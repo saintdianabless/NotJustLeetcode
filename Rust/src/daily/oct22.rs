@@ -363,11 +363,75 @@ impl Solution {
         }
         result
     }
+
+    /// # 886. 可能的二分法
+    ///
+    /// https://leetcode.cn/problems/possible-bipartition/
+    pub fn possible_bipartition(n: i32, dislikes: Vec<Vec<i32>>) -> bool {
+        let n = n as usize;
+        let mut norm = (0..n).map(|_| Vec::new()).collect::<Vec<_>>();
+        for v in dislikes {
+            let a = v[0] as usize;
+            let b = v[1] as usize;
+            norm[a - 1].push(b - 1);
+            norm[b - 1].push(a - 1);
+        }
+        let mut gs = (0..n).map(|_| 0).collect::<Vec<_>>();
+
+        for i in 0..n {
+            if gs[i] == 0 && !Solution::possible_bipartition_dfs(i, 1, &mut gs, &norm) {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    fn possible_bipartition_dfs(
+        cur: usize,
+        g: i32,
+        gs: &mut Vec<i32>,
+        norm: &Vec<Vec<usize>>,
+    ) -> bool {
+        gs[cur] = g;
+        for op in norm[cur].iter() {
+            let op = *op;
+            if gs[op] != 0 && gs[op] == gs[cur] {
+                // 对方已经分组并且分组与自己相同
+                return false;
+            }
+            if gs[op] == 0 && !Solution::possible_bipartition_dfs(op, 3 ^ g, gs, norm) {
+                // 对方未分组，给它不同于cur的分组(3 ^ g)
+                return false;
+            }
+        }
+
+        true
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn possible_bipartition() {
+        assert_eq!(
+            Solution::possible_bipartition(4, vec![vec![1, 2], vec![1, 3], vec![2, 4]]),
+            true
+        );
+        assert_eq!(
+            Solution::possible_bipartition(3, vec![vec![1, 2], vec![1, 3], vec![2, 3]]),
+            false
+        );
+        assert_eq!(
+            Solution::possible_bipartition(
+                5,
+                vec![vec![1, 2], vec![2, 3], vec![3, 4], vec![4, 5], vec![1, 5]]
+            ),
+            false
+        );
+    }
 
     #[test]
     fn build_array() {

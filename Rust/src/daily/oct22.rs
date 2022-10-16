@@ -408,11 +408,47 @@ impl Solution {
 
         true
     }
+
+    /// # 904. 水果成篮
+    ///
+    /// https://leetcode.cn/problems/fruit-into-baskets/solution/
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
+        let mut count: HashMap<i32, usize> = HashMap::new();
+        let mut result = 0;
+        let mut l = 0;
+
+        for r in 0..fruits.len() {
+            let f = fruits[r];
+            count.entry(f).and_modify(|o| *o += 1).or_insert(1);
+            while count.keys().len() > 2 {
+                let lf = fruits[l];
+                let e = count.entry(lf).and_modify(|o| *o -= 1).or_insert(0);
+                if *e == 0 {
+                    count.remove(&lf);
+                }
+                l += 1;
+            }
+            result = result.max(r - l + 1);
+        }
+
+        result as i32
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[test]
+    fn total_fruit() {
+        assert_eq!(Solution::total_fruit(vec![1, 2, 1]), 3);
+        assert_eq!(Solution::total_fruit(vec![0, 1, 2, 2]), 3);
+        assert_eq!(Solution::total_fruit(vec![1, 2, 3, 2, 2]), 4);
+        assert_eq!(
+            Solution::total_fruit(vec![3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4]),
+            5
+        );
+    }
 
     #[test]
     fn possible_bipartition() {

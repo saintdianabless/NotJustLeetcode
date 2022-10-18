@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import List
 
 class Solution:
@@ -23,3 +24,11 @@ class Solution:
                 dp[i][0] += dp[i - 1][0] * N + N
 
         return sum(dp[L])
+
+    def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
+        count = Counter(students)
+        for i in sandwiches:
+            if count[i] == 0:
+                return count[1-i]
+            count[i] -= 1
+        return 0

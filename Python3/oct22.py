@@ -26,6 +26,10 @@ class Solution:
         return sum(dp[L])
 
     def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
+        '''
+            1700 无法吃午餐的学生数量
+            https://leetcode.cn/problems/number-of-students-unable-to-eat-lunch/
+        '''
         count = Counter(students)
         for i in sandwiches:
             if count[i] == 0:

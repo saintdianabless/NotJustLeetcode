@@ -4,7 +4,7 @@ from typing import List
 class Solution:
     def atMostNGivenDigitSet(self, digits: List[str], n: int) -> int:
         '''
-            902 最大为 N 的数字组合
+            # 902. 最大为 N 的数字组合
             https://leetcode.cn/problems/numbers-at-most-n-given-digit-set/
         '''
         N = len(digits)
@@ -27,7 +27,7 @@ class Solution:
 
     def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
         '''
-            1700 无法吃午餐的学生数量
+            # 1700. 无法吃午餐的学生数量
             https://leetcode.cn/problems/number-of-students-unable-to-eat-lunch/
         '''
         count = Counter(students)
@@ -36,3 +36,14 @@ class Solution:
                 return count[1-i]
             count[i] -= 1
         return 0
+
+    def kthGrammar(self, n: int, k: int) -> int:
+        '''
+            # 779. 第K个语法符号
+            https://leetcode.cn/problems/k-th-symbol-in-grammar/
+        '''
+        if k == 1:
+            return 0
+        if k > (1 << (n-2)):
+            return 1 ^ self.kthGrammar(n-1, k - (1 << (n-2)))
+        return self.kthGrammar(n-1, k)

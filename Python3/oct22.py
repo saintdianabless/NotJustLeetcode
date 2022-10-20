@@ -1,4 +1,5 @@
 from collections import Counter
+from math import inf
 from typing import List
 
 class Solution:
@@ -47,3 +48,17 @@ class Solution:
         if k > (1 << (n-2)):
             return 1 ^ self.kthGrammar(n-1, k - (1 << (n-2)))
         return self.kthGrammar(n-1, k)
+
+
+class StockSpanner:
+
+    def __init__(self):
+        self.stk = [(-1, inf)]
+        self.curIdx = -1
+
+    def next(self, price: int) -> int:
+        self.curIdx += 1
+        while self.stk[-1][1] <= price:
+            self.stk.pop()
+        self.stk.append((self.curIdx, price))
+        return self.curIdx - self.stk[-2][0]

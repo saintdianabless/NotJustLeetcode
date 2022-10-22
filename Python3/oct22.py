@@ -70,6 +70,24 @@ class Solution:
 
         return dp[N]
 
+    def mergeAlternately(self, word1: str, word2: str) -> str:
+        '''
+            # 1768. 交替合并字符串
+            https://leetcode.cn/problems/merge-strings-alternately/
+        '''
+        M, N = len(word1), len(word2)
+        result = [None] * (M + N)
+        idx = 0
+        m = max(M, N)
+        for i in range(m):
+            if i < M:
+                result[idx] = word1[i]
+                idx += 1
+            if i < N:
+                result[idx] = word2[i]
+                idx += 1
+        return ''.join(result)
+
 
 class StockSpanner:
     '''

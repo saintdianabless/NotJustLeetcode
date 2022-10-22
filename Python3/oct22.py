@@ -1,3 +1,4 @@
+from bisect import bisect_right
 from collections import Counter
 from math import inf
 from typing import List
@@ -57,7 +58,17 @@ class Solution:
             # 1235. 规划兼职工作
             https://leetcode.cn/problems/maximum-profit-in-job-scheduling/
         '''
-        pass
+        N = len(startTime)
+        jobs = list(range(N))
+        jobs.sort(key=lambda job: endTime[job])
+        dp = [0] * (N + 1)
+
+        for i in range(0, N):
+            cur_job = jobs[i]
+            k = bisect_right(jobs, startTime[cur_job], hi=i, key=lambda job: endTime[job])
+            dp[i+1] = max(dp[i], dp[k] + profit[cur_job])
+
+        return dp[N]
 
 
 class StockSpanner:

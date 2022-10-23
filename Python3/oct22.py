@@ -65,8 +65,11 @@ class Solution:
 
         for i in range(0, N):
             cur_job = jobs[i]
-            k = bisect_right(jobs, startTime[cur_job], hi=i, key=lambda job: endTime[job])
-            dp[i+1] = max(dp[i], dp[k] + profit[cur_job])
+            k = bisect_right(jobs,
+                             startTime[cur_job],
+                             hi=i,
+                             key=lambda job: endTime[job])
+            dp[i + 1] = max(dp[i], dp[k] + profit[cur_job])
 
         return dp[N]
 
@@ -87,6 +90,20 @@ class Solution:
                 result[idx] = word2[i]
                 idx += 1
         return ''.join(result)
+
+    def partitionDisjoint(self, nums: List[int]) -> int:
+        '''
+            # 915. 分割数组
+            https://leetcode.cn/problems/partition-array-into-disjoint-intervals/
+        '''
+        N = len(nums)
+        cm = lm = nums[0]
+        pos = 0
+        for i in range(1, N - 1):
+            cm = max(cm, nums[i])
+            if nums[i] < lm:
+                lm, pos = cm, i
+        return pos + 1
 
 
 class StockSpanner:

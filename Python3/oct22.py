@@ -1,5 +1,5 @@
 from bisect import bisect_right
-from collections import Counter
+from collections import Counter, deque
 from math import inf
 from typing import List
 
@@ -105,6 +105,46 @@ class Solution:
                 lm, pos = cm, i
         return pos + 1
 
+    def shortestBridge(self, grid: List[List[int]]) -> int:
+        '''
+            # 934. 最短的桥
+            https://leetcode.cn/problems/shortest-bridge/
+        '''
+        R = len(grid)
+        C = len(grid[0])
+        dirs = [(-1,0), (1,0), (0,1), (0,-1)]
+        for x, row in enumerate(grid):
+            for y, e in enumerate(row):
+                if e != 1:
+                    continue
+                island = []
+                grid[x][y] = -1
+                q = deque([(x, y)])
+                while len(q) != 0:
+                    pos = q.popleft()
+                    island.append((pos[0],pos[1]))
+                    for dir in dirs:
+                        nx = pos[0] + dir[0]
+                        ny = pos[1] + dir[1]
+                        if nx >= 0 and nx < R and ny >= 0 and ny < C and grid[nx][ny] == 1:
+                            grid[nx][ny] = -1
+                            q.append((nx, ny))
+                step = 0
+                while True:
+                    last_land = island
+                    island = []
+                    for x,y in last_land:
+                        for dir in dirs:
+                            nx = x + dir[0]
+                            ny = y + dir[1]
+                            if nx >= 0 and nx < R and ny >= 0 and ny < C:
+                                if grid[nx][ny] == 1:
+                                    return step
+                                if grid[nx][ny] == 0:
+                                    grid[nx][ny] = -1
+                                    island.append((nx, ny))
+                    step += 1
+
 
 class StockSpanner:
     '''
@@ -122,3 +162,6 @@ class StockSpanner:
             self.stk.pop()
         self.stk.append((self.curIdx, price))
         return self.curIdx - self.stk[-2][0]
+
+s = Solution()
+s.shortestBridge([[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]])

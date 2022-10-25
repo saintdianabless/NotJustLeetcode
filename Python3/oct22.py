@@ -112,7 +112,7 @@ class Solution:
         '''
         R = len(grid)
         C = len(grid[0])
-        dirs = [(-1,0), (1,0), (0,1), (0,-1)]
+        dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)]
         for x, row in enumerate(grid):
             for y, e in enumerate(row):
                 if e != 1:
@@ -122,18 +122,19 @@ class Solution:
                 q = deque([(x, y)])
                 while len(q) != 0:
                     pos = q.popleft()
-                    island.append((pos[0],pos[1]))
+                    island.append((pos[0], pos[1]))
                     for dir in dirs:
                         nx = pos[0] + dir[0]
                         ny = pos[1] + dir[1]
-                        if nx >= 0 and nx < R and ny >= 0 and ny < C and grid[nx][ny] == 1:
+                        if nx >= 0 and nx < R and ny >= 0 and ny < C and grid[
+                                nx][ny] == 1:
                             grid[nx][ny] = -1
                             q.append((nx, ny))
                 step = 0
                 while True:
                     last_land = island
                     island = []
-                    for x,y in last_land:
+                    for x, y in last_land:
                         for dir in dirs:
                             nx = x + dir[0]
                             ny = y + dir[1]
@@ -144,6 +145,27 @@ class Solution:
                                     grid[nx][ny] = -1
                                     island.append((nx, ny))
                     step += 1
+
+    def shortestSubarray(self, nums: List[int], k: int) -> int:
+        '''
+            # 862. 和至少为 K 的最短子数组
+            https://leetcode.cn/problems/shortest-subarray-with-sum-at-least-k/
+        '''
+        N = len(nums)
+        result = 0xffffffff
+        prefix_sums = [0] * (N + 1)
+        for i in range(N):
+            prefix_sums[i + 1] = prefix_sums[i] + nums[i]
+        q = []
+        idx = 0
+        for i, prefix_sum in enumerate(prefix_sums):
+            while len(q) > idx and prefix_sum - prefix_sums[q[idx]] >= k:
+                result = min(result, i - q[idx])
+                idx += 1
+            while len(q) != 0 and prefix_sums[q[-1]] >= prefix_sum:
+                q.pop()
+            q.append(i)
+        return result if result < N + 1 else -1
 
 
 class StockSpanner:
@@ -163,5 +185,7 @@ class StockSpanner:
         self.stk.append((self.curIdx, price))
         return self.curIdx - self.stk[-2][0]
 
+
 s = Solution()
-s.shortestBridge([[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]])
+s.shortestBridge([[1, 1, 1, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 1],
+                  [1, 0, 0, 0, 1], [1, 1, 1, 1, 1]])

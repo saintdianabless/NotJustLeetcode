@@ -180,6 +180,34 @@ class Solution:
                 sign = -sign
         return sign
 
+    def sumSubarrayMins(self, arr: List[int]) -> int:
+        '''
+            # 907. 子数组的最小值之和
+            https://leetcode.cn/problems/sum-of-subarray-minimums/
+        '''
+        MOD = 10**9 + 7
+        result = 0
+        N = len(arr)
+        stk = []
+        lbound = [0] * N
+        rbound = [0] * N
+        for i in range(N):
+            while stk and arr[i] <= arr[stk[-1]]:
+                stk.pop()
+            lbound[i] = i - (stk[-1] if stk else -1)
+            stk.append(i)
+        stk = []
+        for i in range(N-1, -1, -1):
+            while stk and arr[i] < arr[stk[-1]]:
+                stk.pop()
+            rbound[i] = (stk[-1] if stk else N) - i
+            stk.append(i)
+        for i in range(N):
+            result = (result + lbound[i] * rbound[i] * arr[i]) % MOD
+        return result
+            
+
+
 
 class StockSpanner:
     '''
